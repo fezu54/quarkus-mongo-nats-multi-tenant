@@ -1,0 +1,25 @@
+quarkus:
+  mongodb:
+    database: single_tenant
+  messaging:
+    nats:
+      servers: nats://localhost:4222
+      jet-stream:
+        devservices:
+          port: 4222
+          image-name: "nats:latest"
+        streams:
+          - name: ingress
+            subjects:
+              - "test.*.*.test-event"
+        auto-configure: true
+      ssl-enabled: false
+      
+mp:
+  messaging:
+    incoming:
+      test:
+        connector: quarkus-jetstream
+        stream: ingress
+        subject: "test.*.*.test-event"
+        payload-type: "NatsTestMessage"
